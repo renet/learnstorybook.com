@@ -9,7 +9,7 @@ description: '使用 GitHub 和 Netlify 发布 Storybook网站 '
 <div class="aside">
 <strong>您之前是否安装过Chromatic 测试？?</strong>
 <br/>
-🎉 你的故事已经部署好了！ Chromatic 在线安全地为您的故事编制索引，并在分支和提交中跟踪它们。 跳过这一章，然后转到 <a href="/react/zh-TW/conclusion">总结</a>.
+🎉 你的故事已经部署好了！ Chromatic 在线安全地为您的故事编制索引，并在分支和提交中跟踪它们。 跳过这一章，然后转到 <a href="/intro-to-storybook/react/zh-TW/conclusion">总结</a>.
 </div>
 
 ## 导出为静态应用程序
@@ -63,7 +63,7 @@ $ git remote add origin https://github.com/<your username>/taskbox.git
 最后将回购推送到 GitHub
 
 ```bash
-$ git push -u origin master
+$ git push -u origin main
 ```
 
 ### Netlify
@@ -84,11 +84,11 @@ Netlify 内置了持续部署服务,使我们无需配置自己的 CI,即可部�
 
 ![Netlify connect to repo](/intro-to-storybook/netlify-account-picker.png)
 
-通过突出显示在其 CI 中运行的构建命令,以及输出静态站点的目录 来配置 Netlify. 对于分支选择 `master`. 目录是`storybook-static`. `yarn build-storybook`构建.
+通过突出显示在其 CI 中运行的构建命令,以及输出静态站点的目录 来配置 Netlify. 对于分支选择 `main`. 目录是`storybook-static`. `yarn build-storybook`构建.
 
 ![Netlify settings](/intro-to-storybook/netlify-settings.png)
 
-提交表单以 构建和部署代码任务箱的`master`分支. 完成后,我们将在 Netlify 上 看到一条确认消息,其中包含指向 Taskbox 在线 Storybook 的链接.
+提交表单以 构建和部署代码任务箱的`main`分支. 完成后,我们将在 Netlify 上 看到一条确认消息,其中包含指向 Taskbox 在线 Storybook 的链接.
 
 如果您正在跟进,您部署的 Storybook 应该在线[像这样](https://clever-banach-415c03.netlify.com/).
 

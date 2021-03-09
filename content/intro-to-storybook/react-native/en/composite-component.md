@@ -24,16 +24,15 @@ Start with a rough implementation of the `TaskList`. You’ll need to import the
 
 ```javascript
 // components/TaskList.js
-
-import React from 'react';
+import * as React from 'react';
 import Task from './Task';
 import { FlatList, Text, SafeAreaView } from 'react-native';
-import { styles } from "../constants/globalStyles";
+import { styles } from '../constants/globalStyles';
 
 function TaskList({ loading, tasks, onPinTask, onArchiveTask }) {
   const events = {
     onPinTask,
-    onArchiveTask
+    onArchiveTask,
   };
   if (loading) {
     return (
@@ -54,9 +53,7 @@ function TaskList({ loading, tasks, onPinTask, onArchiveTask }) {
       <FlatList
         data={tasks}
         keyExtractor={task => task.id}
-        renderItem={({ item }) => (
-          <Task key={item.id} task={item} {...events} />
-        )}
+        renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
       />
     </SafeAreaView>
   );
@@ -69,7 +66,7 @@ Next create `Tasklist`’s test states in the story file.
 
 ```javascript
 // components/TaskList.stories.js
-import React from 'react';
+import * as React from 'react';
 import { View } from 'react-native';
 import { styles } from '../constants/globalStyles';
 import { storiesOf } from '@storybook/react-native';
@@ -90,7 +87,7 @@ export const withPinnedTasks = [
 ];
 
 storiesOf('TaskList', module)
-  .addDecorator(story => <View style={[styles.Taskbox, { padding: 42 }]}>{story()}</View>)
+  .addDecorator(story => <View style={[styles.TaskBox, { padding: 42 }]}>{story()}</View>)
   .add('default', () => <TaskList tasks={defaultTasks} {...actions} />)
   .add('withPinnedTasks', () => <TaskList tasks={withPinnedTasks} {...actions} />)
   .add('loading', () => <TaskList loading tasks={[]} {...actions} />)
@@ -100,7 +97,7 @@ storiesOf('TaskList', module)
 As you may have noticed, the `addDecorator()` was used in the previous chapter and in this one, it allows us to add some “context” to the rendering of each task. In this case we add padding around the list to make it easier to visually verify.
 
 <div class="aside">
-<a href="https://storybook.js.org/addons/introduction/#1-decorators"><b>Decorators</b></a> are a way to provide arbitrary wrappers to stories. In this case we’re using a decorator to add styling. They can also be used to wrap stories in “providers” –i.e. library components that set React context.
+<a href="https://storybook.js.org/docs/react/writing-stories/decorators"><b>Decorators</b></a> are a way to provide arbitrary wrappers to stories. In this case we’re using a decorator to add styling. They can also be used to wrap stories in “providers” –i.e. library components that set React context.
 </div>
 
 `task` supplies the shape of a `Task` that we created and exported from the `Task.stories.js` file. Similarly, `actions` defines the actions (mocked callbacks) that a `Task` component expects, which the `TaskList` also needs.
@@ -110,7 +107,7 @@ Don't forget that this story also needs to be added to `storybook/index.js` so t
 Change the `configure()` method to the following:
 
 ```javascript
-// import stories
+// storybook/config.js
 configure(() => {
   require('../components/Task.stories.js');
   require('../components/TaskList.stories.js');
@@ -136,10 +133,9 @@ Create a new file called `LoadingRow.js` with the following content:
 
 ```javascript
 // components/LoadingRow.js
-
 import React, { useState, useEffect } from 'react';
 import { Animated, Text, View, Easing, SafeAreaView } from 'react-native';
-import { styles } from '../globalStyles';
+import { styles } from '../constants/globalStyles';
 
 const GlowView = props => {
   const [glowAnim] = useState(new Animated.Value(0));
@@ -184,14 +180,13 @@ export default LoadingRow;
 And update `TaskList.js` to the following:
 
 ```javascript
-// src/components/TaskList.js
-
-import React from 'react';
+// components/TaskList.js
+import * as React from 'react';
 import Task from './Task';
 import PercolateIcons from '../constants/Percolate';
 import LoadingRow from './LoadingRow';
 import { FlatList, Text, SafeAreaView, View } from 'react-native';
-import { styles } from "../constants/globalStyles";
+import { styles } from '../constants/globalStyles';
 
 function TaskList({ loading, tasks, onPinTask, onArchiveTask }) {
   const events = {
@@ -256,9 +251,9 @@ Note the position of the pinned item in the list. We want the pinned item to ren
 As the component grows, so too do input requirements. Define the prop requirements of `TaskList`. Because `Task` is a child component, make sure to provide data in the right shape to render it. To save time and headache, reuse the propTypes you defined in `Task` earlier.
 
 ```javascript
-// src/components/TaskList.js
 
-import React from 'react';
+// components/TaskList.js
+import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import Task from './Task';
@@ -298,19 +293,19 @@ In our case, we want our `TaskList` to render any pinned tasks **before** unpinn
 
 So, to avoid this problem, we can use Jest to render the story to the DOM and run some DOM querying code to verify salient features of the output.
 
-Create a test file called `__tests__/TaskList.test.js`. Here, we’ll build out our tests that make assertions about the output.
+Create a test file called `components/__tests__/TaskList.test.js`. Here, we’ll build out our tests that make assertions about the output.
 
 ```javascript
-// __tests__/TaskList.test.js
-import React from 'react';
-import renderer from 'react-test-renderer';
-import TaskList from '../components/TaskList';
-import { withPinnedTasks } from '../components/TaskList.stories';
-import Task from '../components/Task';
+// components/__tests__/TaskList.test.js
+import * as React from 'react';
+import { create } from 'react-test-renderer';
+import TaskList from '../TaskList';
+import { withPinnedTasks } from '../TaskList.stories';
+import Task from '../Task';
 describe('TaskList', () => {
   it('renders pinned tasks at the start of the list', () => {
     const events = { onPinTask: jest.fn(), onArchiveTask: jest.fn() };
-    const tree = renderer.create(<TaskList tasks={withPinnedTasks} {...events} />);
+    const tree = create(<TaskList tasks={withPinnedTasks} {...events} />);
     const rootElement = tree.root;
     const listofTasks = rootElement.findAllByType(Task);
     expect(listofTasks[0].props.task.title).toBe('Task 6 (pinned)');
@@ -322,4 +317,4 @@ describe('TaskList', () => {
 
 Note that we’ve been able to reuse the `withPinnedTasks` list of tasks in both story and unit test; in this way we can continue to leverage an existing resource (the examples that represent interesting configurations of a component) in many ways.
 
-Notice as well that this test is quite brittle. It's possible that as the project matures, and the exact implementation of the `Task` changes --perhaps using a different styling prop or a `Text` rather than an `TextInput`--the test will fail, and need to be updated. This is not necessarily a problem, but rather an indication to be careful about liberally using unit tests for UI. They're not easy to maintain. Instead rely on visual, snapshot, and visual regression (see [testing chapter](/intro-to-storybook/react-native/en/test/)) tests where possible.
+Notice as well that this test is quite brittle. It's possible that as the project matures, and the exact implementation of the `Task` changes --perhaps using a different styling prop or a `Text` rather than an `TextInput`--the test will fail, and need to be updated. This is not necessarily a problem, but rather an indication to be careful about liberally using unit tests for UI. They're not easy to maintain. Instead rely on visual, snapshot tests where possible.

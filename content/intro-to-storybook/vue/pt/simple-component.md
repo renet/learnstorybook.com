@@ -1,10 +1,11 @@
 ---
-title: 'Construção do componente nuclear'
-tocTitle: 'Componente nuclear'
-description: 'Construção do componente nuclear em isolamento'
+title: 'Construção de um componente simples'
+tocTitle: 'Componente simples'
+description: 'Construção de um componente simples em isolamento'
+commit: 'f03552f'
 ---
 
-Iremos construir um interface de utilizador de acordo com a metodologia de [Desenvolvimento orientada a componentes](https://blog.hichroma.com/component-driven-development-ce1109d56c8e), ou nativamente por (CDD, Component-Driven Development). É um processo que cria interfaces de utilizador a partir da base para o topo, iniciando com componentes e terminando com ecrãs. O DOC (CDD nativamente) ajuda no escalonamento da complexidade á qual o programador é sujeito á medida que constrói o interface de utilizador.
+Iremos construir um interface de utilizador de acordo com a metodologia de [Desenvolvimento orientada a componentes](https://www.componentdriven.org/), ou nativamente por (CDD, Component-Driven Development). É um processo que cria interfaces de utilizador a partir da base para o topo, iniciando com componentes e terminando com ecrãs. O DOC (CDD nativamente) ajuda no escalonamento da complexidade á qual o programador é sujeito á medida que constrói o interface de utilizador.
 
 ## Tarefa
 
@@ -20,7 +21,7 @@ Para que seja possível implementar isto serão necessárias os seguintes adere�
 Á medida que construimos a `Task`, é necessário definir os três estados que correspondem os três tipos de tarefa delineados acima.
 Em seguida usa-se o Storybook para construir este componente isolado, usando dados predefinidos. Irá "testar-se visualmente" a aparência do componente para cada estado á medida que prosseguimos.
 
-Este processo é algo similar ao [Desenvolvimento orientado a testes](https://en.wikipedia.org/wiki/Test-driven_development), ou como é conhecido nativamente (TDD), o que neste caso denominamos de "[DOT Visual](https://blog.hichroma.com/visual-test-driven-development-aec1c98bed87)”, nativamente (Visual TDD).
+Este processo é algo similar ao [Desenvolvimento orientado a testes](https://en.wikipedia.org/wiki/Test-driven_development), ou como é conhecido nativamente (TDD), o que neste caso denominamos de "[DOT Visual](https://www.chromatic.com/blog/visual-test-driven-development)”, nativamente (Visual TDD).
 
 ## Configuração Inicial
 
@@ -30,6 +31,7 @@ Primeiro irá ser criado o componente tarefa e o ficheiro de estórias que o aco
 Iremos iniciar por uma implementação rudimentar da `Task`, que recebe os atributos conhecidos até agora, assim como as duas ações que podem ser desencadeadas (a movimentação entre listas):
 
 ```html
+<!--src/components/Task.vue-->
 <template>
   <div class="list-item">
     <input type="text" :readonly="true" :value="this.task.title" />
@@ -55,6 +57,7 @@ O bloco de código acima, quando renderizado, não é nada mais nada menos que a
 Em seguida irão ser criados os três testes ao estado da tarefa no ficheiro de estórias correspondente:
 
 ```javascript
+// src/components/Task.stories.js
 import { action } from '@storybook/addon-actions';
 import Task from './Task';
 export default {
@@ -82,7 +85,7 @@ export const Default = () => ({
   template: taskTemplate,
   props: {
     task: {
-      default: taskData,
+      default: () => taskData,
     },
   },
   methods: actionsData,
@@ -93,10 +96,10 @@ export const Pinned = () => ({
   template: taskTemplate,
   props: {
     task: {
-      default: {
+      default: () => ({
         ...taskData,
         state: 'TASK_PINNED',
-      },
+      }),
     },
   },
   methods: actionsData,
@@ -105,13 +108,13 @@ export const Pinned = () => ({
 export const Archived = () => ({
   components: { Task },
   template: taskTemplate,
-   props: {
+  props: {
     task: {
-      default: {
+      default: () => ({
         ...taskData,
-        state: "TASK_ARCHIVED"
-      }
-    }
+        state: 'TASK_ARCHIVED',
+      }),
+    },
   },
   methods: actionsData,
 });
@@ -141,20 +144,28 @@ Outro aspeto fantástico é que ao agrupar a `actionsData` necessária ao compon
 Ao ser criada uma estória, é usada uma tarefa base (`taskData`) para definir a forma da tarefa em questão que é necessária ao componente. Geralmente modelada a partir de dados concretos. Mais uma vez o uso da cláusula `export`, neste caso para a estrutura dos dados irá permitir a sua reutilização em estórias futuras, tal como veremos.
 
 <div class="aside">
-    <a href="https://storybook.js.org/addons/introduction/#2-native-addons"><b>Ações</b></a> ajudam na verificação das interações quando são construídos componentes de interface de utilizador isolados. Na grande maioria das vezes não existirá qualquer tipo de acesso ao estado e funções definidas no contexto da aplicação. Como tal é preferível o uso de <code>action()</code> para esta situação.
+    <a href="https://storybook.js.org/docs/vue/essentials/actions"><b>Ações</b></a> ajudam na verificação das interações quando são construídos componentes de interface de utilizador isolados. Na grande maioria das vezes não existirá qualquer tipo de acesso ao estado e funções definidas no contexto da aplicação. Como tal é preferível o uso de <code>action()</code> para esta situação.
 </div>
 
 ## Configuração
 
-Será necessária uma alteração minúscula ao ficheiro de configuração do Storybook (`storybook/config.js`) de forma que este reconheça os ficheiros com extensão `stories.js`, mas também utilize o ficheiro CSS.
-Por norma o Storybook pesquisa numa pasta denominada `/stories` para conter as estórias; este tutorial usa uma nomenclatura similar a `.spec.js`, cuja qual favorecida pelo Vue CLI para testes automatizados.
+É necessário efetuar algumas alterações á configuração do Storybook, de forma que saiba não só onde procurar onde estão as estórias que acabámos de criar, mas também usar o CSS que foi adicionado no [capítulo anterior](/intro-to-storybook/vue/pt/get-started).
+
+Vamos começar por alterar o ficheiro de configuração do Storybook(`.storybook/main.js`) para o seguinte:
 
 ```javascript
-import { configure } from '@storybook/vue';
+// .storybook/main.js
+module.exports = {
+  stories: ['../src/components/**/*.stories.js'],
+  addons: ['@storybook/addon-actions', '@storybook/addon-links'],
+};
+```
 
+Após efetuar esta alteração, uma vez mais dentro da pasta (ou diretório) `.storybook`, crie um novo ficheiro (ou arquivo) chamado `preview.js` com o seguinte conteúdo:
+
+```javascript
+// .storybook/preview.js
 import '../src/index.css';
-
-configure(require.context('../src/components', true, /\.stories\.js$/), module);
 ```
 
 Após esta alteração, quando reiniciar o servidor Storybook, deverá produzir os casos de teste para os três diferentes estados da tarefa:
@@ -173,6 +184,7 @@ Neste momento já possuímos o Storybook configurado, os elementos de estilo imp
 O componente neste momento ainda está algo rudimentar. Vamos fazer algumas alterações de forma a atingir o design pretendido, sem entrar em muitos detalhes:
 
 ```html
+<!--src/components/Task.vue-->
 <template>
   <div :class="taskClass">
     <label class="checkbox">
@@ -247,32 +259,22 @@ Este tipo de testes refere-se á pratica de guardar o output considerado "bom" d
 Com o [extra Storyshots](https://github.com/storybooks/storybook/tree/master/addons/storyshots) é criado um teste de snapshot para cada uma das estórias. Para que este possa ser usado, adicionam-se as seguintes dependências de desenvolvimento:
 
 ```bash
-yarn add -D @storybook/addon-storyshots jest-vue-preprocessor babel-plugin-require-context-hook
+yarn add -D @storybook/addon-storyshots jest-vue-preprocessor
 ```
 
 Em seguida é criado o ficheiro `tests/unit/storybook.spec.js` com seguinte:
 
 ```javascript
-import registerRequireContextHook from 'babel-plugin-require-context-hook/register';
+// tests/unit/storybook.spec.js
 import initStoryshots from '@storybook/addon-storyshots';
-
-registerRequireContextHook();
 initStoryshots();
 ```
 
-Em seguida terá que se alterar o ficheiro `jest.config.js`:
+Finalmente terá que se alterar o ficheiro `jest.config.js`:
 
 ```js
+  // jest.config.js
   transformIgnorePatterns: ["/node_modules/(?!(@storybook/.*\\.vue$))"],
-```
-
-E finalmente uma ligeira alteração ao ficheiro `babel.config.js`:
-
-```js
-module.exports = api => ({
-  presets: ['@vue/app'],
-  ...(api.env('test') && { plugins: ['require-context-hook'] }),
-});
 ```
 
 Assim que os passos descritos acima estiverem concluídos, poderá ser executado `yarn test:unit` e constatar o seguinte output:

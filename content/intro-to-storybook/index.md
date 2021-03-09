@@ -14,10 +14,9 @@ toc:
     'composite-component',
     'data',
     'screen',
+    'deploy',
     'test',
     'using-addons',
-    'creating-addons',
-    'deploy',
     'conclusion',
     'contribute',
   ]
@@ -57,7 +56,7 @@ contributors:
     {
       src: 'https://avatars2.githubusercontent.com/u/9523719',
       name: 'Kyle Holmberg',
-      detail: 'Engineer at Acorns',
+      detail: 'Engineer at Air',
     },
     {
       src: 'https://avatars2.githubusercontent.com/u/1474548',
@@ -72,19 +71,24 @@ twitterShareText: 'I’m learning Storybook! It’s a great dev tool for UI comp
 
 <div class="badge-box">
   <div class="badge">
-    <img src="/frameworks/logo-react.svg"> React
+    <img src="/frameworks/logo-react.svg">
+     React
   </div>
   <div class="badge">
-    <img src="/frameworks/logo-react.svg"> React Native
+    <img src="/frameworks/logo-react.svg">
+     React Native
   </div>
   <div class="badge">
-    <img src="/frameworks/logo-vue.svg"> Vue
+    <img src="/frameworks/logo-vue.svg">
+     Vue
   </div>
   <div class="badge">
-    <img src="/frameworks/logo-angular.svg"> Angular
+    <img src="/frameworks/logo-angular.svg">
+     Angular
   </div>
   <div class="badge">
-    <img src="/frameworks/logo-svelte.svg"> Svelte
+   <img src="/frameworks/logo-svelte.svg">
+     Svelte
   </div>
 </div>
 

@@ -2,6 +2,8 @@ import { css } from 'styled-components';
 import { styles } from '@storybook/design-system';
 import { darken } from 'polished';
 
+require(`prismjs/components/prism-diff`);
+
 const { background, color, typography } = styles;
 
 export const guideFormatting = css`
@@ -27,18 +29,20 @@ export const guideFormatting = css`
     margin-top: 18px;
     margin-bottom: 24px;
   }
-
   .badge {
     display: inline-flex;
     vertical-align: top;
     margin-bottom: 10px;
     align-items: center;
     background: ${background.app};
-    border-radius: 4px;
+    border-radius: ${styles.spacing.borderRadius.small}px;
     padding: 3px 20px;
     font-size: ${typography.size.s2}px;
     line-height: 24px;
     margin-right: 6px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: border 0.3s ease-in-out;
 
     &:last-of-type {
       margin-right: 0;
@@ -47,6 +51,24 @@ export const guideFormatting = css`
     img {
       width: 16px;
       margin-right: 6px;
+    }
+    & a {
+      color: ${styles.color.darker};
+      transition: all 250ms ease-out;
+      display: inline-block;
+      text-decoration: none;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      box-shadow: rgba(0, 0, 0, 0.08) 0 3px 10px 0;
     }
   }
 `;
@@ -199,12 +221,20 @@ export const chapterFormatting = css`
     font-size: ${typography.size.s3}px;
     color: ${color.darker};
     background: #f8fafc;
-    border-radius: 4px;
+    border-radius: ${styles.spacing.borderRadius.small}px;
     padding: 20px;
 
     p:last-child {
       margin-bottom: 0;
     }
+  }
+  .translation-aside {
+    font-size: ${typography.size.s3}px;
+    color: ${color.darker};
+    background: #f8fafc;
+    border-radius: ${styles.spacing.borderRadius.small}px;
+    padding: 20px;
+    margin-bottom: 1.5rem;
   }
 
   /* Tables based on GH markdown format */
@@ -280,6 +310,21 @@ export const chapterFormatting = css`
 
   .aside code {
     font-size: ${typography.size.s3 - 2}px;
+  }
+
+  .gatsby-code-title {
+    margin-top: 2em;
+    border-bottom: 1px solid ${color.border};
+    padding: 1rem;
+    font-size: ${typography.size.s3 - 2}px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    line-height: 1;
+    background: ${color.lighter};
+    color: ${color.mediumdark};
+  }
+
+  .gatsby-code-title + pre[class*='language-'] {
+    margin-top: 0;
   }
 
   blockquote {

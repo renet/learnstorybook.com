@@ -28,21 +28,17 @@ Visual regression tests are designed to catch changes in appearance. They work b
 
 Storybook is a fantastic tool for visual regression testing because every story is essentially a test specification. Each time we write or update a story we get a spec for free!
 
-There are a number of tools for visual regression testing. For professional teams we recommend [**Chromatic**](https://www.chromaticqa.com/), an addon made by Storybook maintainers that runs tests in the cloud.
+There are a number of tools for visual regression testing. For professional teams we recommend [**Chromatic**](https://www.chromatic.com/), an addon made by Storybook maintainers that runs tests in the cloud.
 
 ## Setup visual regression testing
 
 Chromatic is a hassle-free Storybook addon for visual regression testing and review in the cloud. Since it’s a paid service (with a free trial), it may not be for everyone. However, Chromatic is an instructive example of a production visual testing workflow that we'll try out for free. Let’s have a look.
 
-### Initiate Git
+### Bring git up to date
+
+Angular CLI has already created a repo for your project; let's check in the changes we made:
 
 First you want to setup Git for your project in the local directory. Chromatic uses Git history to keep track of your UI components.
-
-```bash
-$ git init
-```
-
-Next add files to the first commit.
 
 ```bash
 $ git add .
@@ -59,27 +55,12 @@ $ git commit -m "taskbox UI"
 Add the package as a dependency.
 
 ```bash
-yarn add storybook-chromatic
+npm install -D chromatic
 ```
 
-Import Chromatic in your `.storybook/config.js` file.
+One fantastic thing about this addon is that it will use Git history to keep track of your UI components.
 
-```javascript
-import { configure } from '@storybook/angular';
-import 'storybook-chromatic';
-import '../src/styles.less';
-
-// automatically import all files ending in *.stories.ts
-const req = require.context('../src/', true, /.stories.ts$/);
-
-function loadStories() {
-  req.keys().forEach(filename => req(filename));
-}
-
-configure(loadStories, module);
-```
-
-Then [login to Chromatic](https://www.chromaticqa.com/start) with your GitHub account (Chromatic only asks for lightweight permissions). Create a project with name "taskbox" and copy your unique `app-code`.
+Then [login to Chromatic](https://www.chromatic.com/start) with your GitHub account (Chromatic only asks for lightweight permissions). Create a project with name "taskbox" and copy your unique `project-token`.
 
 <video autoPlay muted playsInline loop style="width:520px; margin: 0 auto;">
   <source
@@ -88,14 +69,14 @@ Then [login to Chromatic](https://www.chromaticqa.com/start) with your GitHub ac
   />
 </video>
 
-Run the test command in the command line to setup visual regression tests for Storybook. Don't forget to add your unique app code in place of `<app-code>`.
+Run the test command in the command line to setup visual regression tests for Storybook. Don't forget to add your unique app code in place of `<project-token>`.
 
 ```bash
-./node_modules/.bin/chromatic test --app-code=<app-code>
+npx chromatic --project-token=<project-token>
 ```
 
 <div class="aside">
-<code>--do-not-start</code> is an option that tells Chromatic not to start Storybook. Use this if you already have Storybook running. If not omit <code>--do-not-start</code>.
+If your Storybook has a custom build script you may have to <a href="https://www.chromatic.com/docs/setup#command-options">add options </a> to this command.
 </div>
 
 Once the first test is complete, we have test baselines for each story. In other words, screenshots of each story known to be “good”. Future changes to those stories will be compared to the baselines.
@@ -115,7 +96,7 @@ This yields a new background color for the item.
 Use the test command from earlier to run another Chromatic test.
 
 ```bash
-./node_modules/.bin/chromatic test --app-code=<app-code>
+npx chromatic --project-token=<project-token>
 ```
 
 Follow the link to the web UI where you’ll see changes.

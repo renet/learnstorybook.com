@@ -2,15 +2,15 @@
 title: 'Addons'
 tocTitle: 'Addons'
 description: 'Leer hoe je add-ons kunt integreren en gebruiken aan de hand van een populair voorbeeld'
-commit: 'dac373a'
+commit: 'a23f4d0'
 ---
 
-Storybook beschikt over een robuust systeem van [add-ons](https://storybook.js.org/addons/introduction/) waarmee je de developer experience kunt verbeteren voor iedereen in je team. Als je deze tutorial lineair hebt gevolgd, hebben we tot nu toe naar meerdere add-ons verwezen en je zal er al een geïmplementeerd hebben in het [Testing-hoofdstuk](/react/en/test/).
+Storybook beschikt over een robuust systeem van [add-ons](https://storybook.js.org/docs/react/configure/storybook-addons) waarmee je de developer experience kunt verbeteren voor iedereen in je team. Als je deze tutorial lineair hebt gevolgd, hebben we tot nu toe naar meerdere add-ons verwezen en je zal er al een geïmplementeerd hebben in het [Testing-hoofdstuk](/intro-to-storybook/react/nl/test/).
 
 <div class="aside">
 <strong> Op zoek naar een lijst met mogelijke add-ons? </strong>
 <br/>
-😍 Je kunt de lijst met officieel ondersteunde en goede community-add-ons <a href="https://storybook.js.org/addons/addon-gallery/">hier bekijken</a>.
+😍 Je kunt de lijst met officieel ondersteunde en goede community-add-ons <a href="https://storybook.js.org/addons">hier bekijken</a>.
 </div>
 
 We zouden nog veel kunnen schrijven over het configureren en gebruiken van add-ons voor al je specifieke use-cases. Laten we nu werken aan de integratie van een van de meest populaire add-ons in het ecosysteem van Storybook: [knobs](https://github.com/storybooks/storybook/tree/master/addons/knobs).
@@ -31,7 +31,7 @@ Knobs is een geweldige bron voor designers en developers om te experimenteren en
 Eerst moeten we alle benodigde dependencies installeren.
 
 ```bash
-yarn add @storybook/addon-knobs
+yarn add -D @storybook/addon-knobs
 ```
 
 Registreer Knobs in je `.storybook/addons.js` bestand.
@@ -97,7 +97,7 @@ Zoals [hier](https://github.com/storybooks/storybook/tree/master/addons/knobs#ob
 
 ## Addons evolueren het bereik van je Storybook
 
-Niet alleen dient je Storybook instantie als een prachtige [CDD-omgeving](https://blog.hichroma.com/component-driven-development-ce1109d56c8e), maar nu bieden we ook een interactieve bron van documentatie aan. PropTypes zijn geweldig, maar een designer of iemand die helemaal nieuw is in de code van een component, kan zijn gedrag heel snel achterhalen via Storybook met de knobs add-on geïmplementeerd.
+Niet alleen dient je Storybook instantie als een prachtige [CDD-omgeving](https://www.componentdriven.org/), maar nu bieden we ook een interactieve bron van documentatie aan. PropTypes zijn geweldig, maar een designer of iemand die helemaal nieuw is in de code van een component, kan zijn gedrag heel snel achterhalen via Storybook met de knobs add-on geïmplementeerd.
 
 ## Knobs gebruiken om edge-cases te vinden
 
@@ -145,12 +145,8 @@ Nu we de story hebben toegevoegd, kunnen we deze edge-case gemakkelijk reproduce
 
 ![Hier staat het in Storybook.](/intro-to-storybook/addon-knobs-demo-edge-case-in-storybook.png)
 
-Als we [visuele regressietests](/react/en/test/) gebruiken, zullen we ook worden geïnformeerd als we ooit onze ellipsvormende oplossing breken. Dergelijke obscure edge-cases kunnen altijd worden vergeten!
+Als we [visuele regressietests](/intro-to-storybook/react/nl/test/) gebruiken, zullen we ook worden geïnformeerd als we ooit onze ellipsvormende oplossing breken. Dergelijke obscure edge-cases kunnen altijd worden vergeten!
 
 ### Merge de wijzigingen
 
 Vergeet niet je wijzigingen te mergen met git!
-
-## Addons delen met het team
-
-Knobs is een geweldige manier om niet-developers met je componenten en stories te laten spelen. Het kan echter moeilijk zijn om het storybook op hun lokale computer uit te voeren. Daarom kan het handig zijn om je storybook naar een online locatie te deployen. In het volgende hoofdstuk zullen we precies dat doen!

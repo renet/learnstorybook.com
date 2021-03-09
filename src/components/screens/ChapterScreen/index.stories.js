@@ -1,8 +1,13 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
 import Chapter from './index';
 
-const props = {
+export default {
+  component: Chapter,
+  title: 'Screens/ChapterScreen/index',
+};
+const Story = args => <Chapter {...args} />;
+export const Default = Story.bind({});
+Default.args = {
   data: {
     currentPage: {
       html: '<div>The html</div>',
@@ -18,6 +23,7 @@ const props = {
         language: 'en',
         permalink: 'https://learnstorybook.com/sample-guide',
         slug: '/chapter-slug',
+        tutorialupdated: true,
       },
     },
     currentGuide: {
@@ -32,7 +38,7 @@ const props = {
       siteMetadata: {
         githubUrl: 'https://github.com',
         contributeUrl: 'https://github.com',
-        permalink: 'https://learnstorybook.com',
+        permalink: 'https://storybook.js.org/tutorials',
         title: 'Learn Storybook',
       },
     },
@@ -99,6 +105,26 @@ const props = {
   },
 };
 
-storiesOf('Screens|ChapterScreen/index', module)
-  .addParameters({ component: Chapter })
-  .add('default', () => <Chapter {...props} />);
+export const TutorialNotUpdated = Story.bind({});
+TutorialNotUpdated.args = {
+  data: {
+    ...Default.args.data,
+    currentPage: {
+      html: '<div>The html</div>',
+      frontmatter: {
+        commit: '123456789',
+        title: 'Chapter Title',
+        description: 'A good chapter',
+      },
+      fields: {
+        chapter: 'chapter-1',
+        framework: 'react',
+        guide: 'sample-guide',
+        language: 'en',
+        permalink: 'https://learnstorybook.com/sample-guide',
+        slug: '/chapter-slug',
+        tutorialupdated: false,
+      },
+    },
+  },
+};

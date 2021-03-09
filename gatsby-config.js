@@ -1,15 +1,77 @@
 const isDeployPreview = process.env.CONTEXT === 'deploy-preview';
-const permalink = isDeployPreview ? process.env.DEPLOY_PRIME_URL : 'https://learnstorybook.com';
+const permalinkBase = isDeployPreview ? process.env.DEPLOY_PRIME_URL : 'https://storybook.js.org';
 
 module.exports = {
+  flags: {
+    PRESERVE_WEBPACK_CACHE: true,
+    FAST_DEV: true,
+    QUERY_ON_DEMAND: true,
+  },
+  pathPrefix: `/tutorials`,
   siteMetadata: {
     title: 'Storybook Tutorials',
     description:
-      'Learn Storybook teaches frontend developers how to create UIs with components and design systems. Our free in-depth guides are created by Storybook maintainers and peer-reviewed by the open source community.',
-    permalink,
-    siteUrl: permalink,
+      'Learn how to develop UIs with components and design systems. Our in-depth frontend guides are created by Storybook maintainers and peer-reviewed by the open source community.',
+    permalink: `${permalinkBase}/tutorials`,
+    siteUrl: permalinkBase,
     githubUrl: 'https://github.com/chromaui/learnstorybook.com',
     contributeUrl: 'https://github.com/chromaui/learnstorybook.com/#contribute',
+    storybookVersion: 6.1,
+    tutorialStatus: {
+      'intro-to-storybook': {
+        react: {
+          de: 5.3,
+          en: 6.1,
+          es: 5.3,
+          fr: 6.1,
+          ja: 6.1,
+          ko: 6.1,
+          nl: 5.3,
+          pt: 5.3,
+          'zh-CN': 6.1,
+          'zh-TW': 5.3,
+        },
+        'react-native': {
+          en: 5.3,
+          es: 5.3,
+        },
+        vue: {
+          en: 6.1,
+          es: 5.3,
+          fr: 5.3,
+          pt: 5.3,
+        },
+        angular: {
+          en: 5.3,
+          es: 5.3,
+          pt: 5.3,
+        },
+        svelte: {
+          en: 6.1,
+          es: 5.3,
+        },
+        ember: {
+          en: 6.1,
+        },
+      },
+      'design-systems-for-developers': {
+        react: {
+          en: 6.1,
+          ko: 6.1,
+          pt: 5.3,
+        },
+      },
+      'visual-testing-handbook': {
+        react: {
+          en: 6.1,
+        },
+      },
+      'create-an-addon': {
+        react: {
+          en: 6.1,
+        },
+      },
+    },
   },
   plugins: [
     {
@@ -26,15 +88,48 @@ module.exports = {
         path: `${__dirname}/content/`,
       },
     },
-    `gatsby-transformer-remark`,
-    `gatsby-plugin-styled-components`,
-    `gatsby-plugin-sitemap`,
+    `gatsby-plugin-sharp`,
     {
-      resolve: 'gatsby-plugin-segment-js',
+      resolve: `gatsby-transformer-remark`,
       options: {
-        prodKey: 'JXEYLKE1T9ptsDlNqeNIMdoOy1Ept8CB',
-        trackPage: true,
+        plugins: [
+          `gatsby-remark-copy-linked-files`,
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              quality: 100,
+              maxWidth: 800,
+              linkImagesToOriginal: false,
+            },
+          },
+          `gatsby-remark-code-titles`,
+          // A custom plugin in /plugins directory
+          `gatsby-remark-prefix-links`,
+        ],
       },
     },
+    `gatsby-plugin-styled-components`,
+    `gatsby-plugin-sitemap`,
+    ...(process.env.GOOGLE_ANALYTICS_TRACKING_ID && !isDeployPreview
+      ? [
+          {
+            resolve: 'gatsby-plugin-google-analytics',
+            options: {
+              trackingId: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+              head: true,
+            },
+          },
+        ]
+      : []),
+    ...(process.env.FACEBOOK_PIXEL_ID && !isDeployPreview
+      ? [
+          {
+            resolve: 'gatsby-plugin-facebook-pixel',
+            options: {
+              pixelId: process.env.FACEBOOK_PIXEL_ID,
+            },
+          },
+        ]
+      : []),
   ],
 };
